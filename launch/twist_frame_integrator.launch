@@ -1,0 +1,14 @@
+<launch>
+  <node pkg="lcsr_tf_tools" type="twist_frame_integrator.py" name="twist_frame_integrator" output="screen">
+    <param name="linear_multiplier" value="0.0001"/>
+    <param name="angular_multiplier" value="0.0001"/>
+    <param name="broadcast_rate" value="50"/>
+
+    <param name="child_frame_id" value="integrated_twist_frame"/>
+    <param name="frame_id" value="/world"/>
+
+    <param name="body_fixed" value="true"/>
+
+    <remap from="/twist" to="/spacenav/twist"/>
+  </node>
+</launch>

@@ -1,0 +1,18 @@
+<package>
+  <description brief="lcsr_tf_tools">
+
+     lcsr_tf_tools
+
+  </description>
+  <author>Jonathan Bohren</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/lcsr_tf_tools</url>
+
+  <depend package="rospy"/>
+  <depend package="tf"/>
+  <depend package="geometry_msgs"/>
+  <depend package="python_orocos_kdl"/>
+</package>
+
+
