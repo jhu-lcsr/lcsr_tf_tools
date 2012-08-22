@@ -72,9 +72,7 @@ public:
     broadcaster.sendTransform(transform_);
   };
 
-private:
   tf::StampedTransform transform_;
-
 };
 
 int main(int argc, char ** argv)
@@ -128,14 +126,14 @@ int main(int argc, char ** argv)
   TransformSender tf_sender(transform);
 
   // Create interactive marker server
-  interactive_markers::InteractiveMarkerServer server("interactive_transform_publisher");
+  interactive_markers::InteractiveMarkerServer server("interactive_transform_publisher/"+transform.child_frame_id_);
 
   // Create an interactive marker 
   using namespace visualization_msgs;
   InteractiveMarker int_marker;
   int_marker.header.frame_id = transform.frame_id_;
   int_marker.name = transform.child_frame_id_;
-  int_marker.description = "Interactive Transform Publisher";
+  int_marker.description = transform.child_frame_id_;
   int_marker.scale = 0.2;
 
   // Create a sphere marker
@@ -200,6 +198,20 @@ int main(int argc, char ** argv)
     ros::spinOnce();
     rate.sleep();
   }
+
+  // Dump the last pose
+  std::cout<<"Last pose (x y z qx qy qz frame_id child_frame_id rate[ms]): "
+    <<tf_sender.transform_.getOrigin().x()<<" "
+    <<tf_sender.transform_.getOrigin().y()<<" "
+    <<tf_sender.transform_.getOrigin().z()<<"  "
+    <<tf_sender.transform_.getRotation().x()<<" "
+    <<tf_sender.transform_.getRotation().y()<<" "
+    <<tf_sender.transform_.getRotation().z()<<" "
+    <<tf_sender.transform_.getRotation().w()<<"  "
+    <<tf_sender.transform_.frame_id_<<"  "
+    <<tf_sender.transform_.child_frame_id_<<"  "
+    <<1000.0*rate.expectedCycleTime().toSec()<<"  "
+    <<std::endl;
 
   return 0;
 
