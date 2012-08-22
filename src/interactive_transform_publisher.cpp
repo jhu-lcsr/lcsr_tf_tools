@@ -80,7 +80,7 @@ private:
 int main(int argc, char ** argv)
 {
   //Initialize ROS
-  ros::init(argc, argv,"static_transform_publisher", ros::init_options::AnonymousName);
+  ros::init(argc, argv,"interactive_transform_publisher", ros::init_options::AnonymousName);
 
   ros::NodeHandle nh;
   tf::StampedTransform transform;
@@ -115,12 +115,12 @@ int main(int argc, char ** argv)
     default:
       printf("A command line utility for manually sending a transform.\n");
       printf("It will periodicaly republish the given transform. \n");
-      printf("Usage: static_transform_publisher x y z  yaw(z) pitch(y) roll(x)  frame_id child_frame_id  period(milliseconds) \n");
+      printf("Usage: interactive_transform_publisher x y z  yaw(z) pitch(y) roll(x)  frame_id child_frame_id  period(milliseconds) \n");
       printf("OR \n");
-      printf("Usage: static_transform_publisher x y z  qx qy qz qw  frame_id child_frame_id  period(milliseconds) \n");
+      printf("Usage: interactive_transform_publisher x y z  qx qy qz qw  frame_id child_frame_id  period(milliseconds) \n");
       printf("\nThis transform is the transform of the coordinate frame from frame_id into the coordinate frame \n");
       printf("of the child_frame_id.  \n");
-      ROS_ERROR("static_transform_publisher exited due to not having the right number of arguments");
+      ROS_ERROR("interactive_transform_publisher exited due to not having the right number of arguments");
       return -1;
   };
 
