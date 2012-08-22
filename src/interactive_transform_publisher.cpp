@@ -135,6 +135,13 @@ int main(int argc, char ** argv)
   int_marker.name = transform.child_frame_id_;
   int_marker.description = transform.child_frame_id_;
   int_marker.scale = 0.2;
+  int_marker.pose.position.x = transform.getOrigin().x();
+  int_marker.pose.position.y = transform.getOrigin().y();
+  int_marker.pose.position.z = transform.getOrigin().z();
+  int_marker.pose.orientation.x = transform.getRotation().x();
+  int_marker.pose.orientation.y = transform.getRotation().y();
+  int_marker.pose.orientation.z = transform.getRotation().z();
+  int_marker.pose.orientation.w = transform.getRotation().w();
 
   // Create a sphere marker
   Marker sphere_marker;
@@ -200,7 +207,7 @@ int main(int argc, char ** argv)
   }
 
   // Dump the last pose
-  std::cout<<"Last pose (x y z qx qy qz frame_id child_frame_id rate[ms]): "
+  std::cout<<"Last pose (x y z qx qy qz frame_id child_frame_id rate[ms]): "<<std::endl<<"  "
     <<tf_sender.transform_.getOrigin().x()<<" "
     <<tf_sender.transform_.getOrigin().y()<<" "
     <<tf_sender.transform_.getOrigin().z()<<"  "
