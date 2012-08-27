@@ -35,23 +35,23 @@ def main():
             type=float, nargs=1,
             help='Publish period in ms.')
 
-    parser.add_argument('-xyz', 
+    parser.add_argument('--xyz', 
             metavar=('x','y','z'),
             default=[0.0,0.0,0.0],
             type=float, nargs=3,
             help='Position in x, y, z)')
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-aa', 
+    group.add_argument('--aa', 
             metavar=('x','y','z','t'), 
             default=[0.0,0.0,0.0,1.0],
             type=float, nargs=4,
             help='Orientation in axis/angle x, y, z, theta')
-    group.add_argument('-ypr', 
+    group.add_argument('--ypr', 
             metavar=('yaw','pitch','roll'), 
             type=float, nargs=3,
             help='Orientation in yaw, pitch, roll')
-    group.add_argument('-quat', 
+    group.add_argument('--quat', 
             metavar=('qx','qy','qz','qw'), 
             type=float, nargs=4,
             help='Orientation in quaternion')
