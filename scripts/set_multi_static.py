@@ -30,19 +30,19 @@ def main():
             help='Position in x, y, z)')
 
     group = parser.add_mutually_exclusive_group()
+    group.add_argument('--quat', 
+            metavar=('qx','qy','qz','qw'), 
+            default=[0.0,0.0,0.0,1.0],
+            type=float, nargs=4,
+            help='Orientation in quaternion')
     group.add_argument('--aa', 
             metavar=('x','y','z','t'), 
-            default=[0.0,0.0,0.0,1.0],
             type=float, nargs=4,
             help='Orientation in axis/angle x, y, z, theta')
     group.add_argument('--ypr', 
             metavar=('yaw','pitch','roll'), 
             type=float, nargs=3,
             help='Orientation in yaw, pitch, roll')
-    group.add_argument('--quat', 
-            metavar=('qx','qy','qz','qw'), 
-            type=float, nargs=4,
-            help='Orientation in quaternion')
 
     parser.add_argument('parent_frame_id', 
             metavar=('frame_id'), 
@@ -91,7 +91,7 @@ def main():
     tform.transform.rotation.w = args.quat[3]
 
     # Publish the transform
-    rospy.loginfo("Registering static transform %s --> %s" %(tform.header.frame_id, tform.child_frame_id))
+    rospy.loginfo("Registering static transform %s --> %s\n%s" %(tform.header.frame_id, tform.child_frame_id, str(tform)))
     set_pub = rospy.Publisher(args.node_name[0]+'/set_frame', geometry_msgs.TransformStamped, latch=True)
     set_pub.publish(tform)
 
