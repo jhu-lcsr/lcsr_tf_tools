@@ -24,7 +24,7 @@ def main():
             type=str, nargs='+',
             help='The frame_ids of each frame to stop broadcasting.')
 
-    args = parser.parse_args()
+    args = parser.parse_args(rospy.myargv(argv=sys.argv))
 
     rospy.init_node('multi_static')
 

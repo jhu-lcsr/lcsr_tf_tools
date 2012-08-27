@@ -11,6 +11,8 @@ import std_msgs.msg as std_msgs
 import geometry_msgs.msg as geometry_msgs
 import tf.msg
 
+from multi_static_transform_publisher import MultiPublisher
+
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser(description='Set frames being broadcast by a multi_static_transform_publisher')
@@ -52,7 +54,7 @@ def main():
             metavar=('qx','qy','qz','qw'), 
             type=float, nargs=4,
             help='Orientation in quaternion')
-    args = parser.parse_args()
+    args = parser.parse_args(rospy.myargv(argv=sys.argv))
 
     rospy.init_node('multi_static')
 
