@@ -22,18 +22,6 @@ def main():
             default=['multi_tf_pub'],
             type=str, nargs=1,
             help='The name of the multi publisher that should publish this transform. Default is \'multi_tf_pub\'')
-    parser.add_argument('parent_frame_id', 
-            metavar=('frame_id'), 
-            type=str, nargs=1,
-            help='The frame_id of the frame in which new new frame is defined.')
-    parser.add_argument('child_frame_id', 
-            metavar=('child_frame_id'), 
-            type=str, nargs=1,
-            help='The frame_id of the new frame.')
-    parser.add_argument('period', 
-            metavar=('period'), 
-            type=float, nargs=1,
-            help='Publish period in ms.')
 
     parser.add_argument('--xyz', 
             metavar=('x','y','z'),
@@ -55,7 +43,22 @@ def main():
             metavar=('qx','qy','qz','qw'), 
             type=float, nargs=4,
             help='Orientation in quaternion')
-    args = parser.parse_args(rospy.myargv(argv=sys.argv))
+
+    parser.add_argument('parent_frame_id', 
+            metavar=('frame_id'), 
+            type=str, nargs=1,
+            help='The frame_id of the frame in which new new frame is defined.')
+    parser.add_argument('child_frame_id', 
+            metavar=('child_frame_id'), 
+            type=str, nargs=1,
+            help='The frame_id of the new frame.')
+    parser.add_argument('period', 
+            metavar=('period'), 
+            type=float, nargs=1,
+            help='Publish period in ms.')
+
+    myargv = rospy.myargv(argv=sys.argv)
+    args = parser.parse_args(args=myargv[1:])
 
     rospy.init_node('multi_static')
 
@@ -88,7 +91,7 @@ def main():
     tform.transform.rotation.w = args.quat[3]
 
     # Publish the transform
-    rospy.loginfo("Registering static frame...")
+    rospy.loginfo("Registering static transform %s --> %s" %(tform.header.frame_id, tform.child_frame_id))
     set_pub = rospy.Publisher(args.node_name[0]+'/set_frame', geometry_msgs.TransformStamped, latch=True)
     set_pub.publish(tform)
 
