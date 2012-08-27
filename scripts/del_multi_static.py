@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import argparse
 
 import roslib; roslib.load_manifest('lcsr_tf_tools')
