@@ -21,27 +21,27 @@ two other scripts:
 
 
 Usage::
-``    set_multi_static.py [-h] [--node-name node_name] [-xyz x y z]
-``                               [-aa x y z t | -ypr yaw pitch roll | -quat qx qy qz qw]
-``                               frame_id child_frame_id period
-``
-``    Set frames being broadcast by a multi_static_transform_publisher
-``
-``    positional arguments:
-``      frame_id              The frame_id of the frame in which new new frame is
-``                            defined.
-``      child_frame_id        The frame_id of the new frame.
-``      period                Publish period in ms.
-``
-``    optional arguments:
-``      -h, --help            show this help message and exit
-``      --node-name node_name
-``                            The name of the multi publisher that should publish
-``                            this transform. Default is 'multi_tf_pub'
-``      -xyz x y z            Position in x, y, z)
-``      -aa x y z t           Orientation in axis/angle x, y, z, theta
-``      -ypr yaw pitch roll   Orientation in yaw, pitch, roll
-``      -quat qx qy qz qw     Orientation in quaternion
+    set_multi_static.py [-h] [--node-name node_name] [-xyz x y z]
+                               [-aa x y z t | -ypr yaw pitch roll | -quat qx qy qz qw]
+                               frame_id child_frame_id period
+
+    Set frames being broadcast by a multi_static_transform_publisher
+
+    positional arguments:
+      frame_id              The frame_id of the frame in which new new frame is
+                            defined.
+      child_frame_id        The frame_id of the new frame.
+      period                Publish period in ms.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --node-name node_name
+                            The name of the multi publisher that should publish
+                            this transform. Default is 'multi_tf_pub'
+      -xyz x y z            Position in x, y, z)
+      -aa x y z t           Orientation in axis/angle x, y, z, theta
+      -ypr yaw pitch roll   Orientation in yaw, pitch, roll
+      -quat qx qy qz qw     Orientation in quaternion
 
 
 
