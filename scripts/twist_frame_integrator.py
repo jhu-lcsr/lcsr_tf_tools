@@ -118,7 +118,7 @@ class TwistFrameIntegrator(object):
                 self.transform.M = PyKDL.Rotation.Quaternion(*self.rotation)
 
                 # Invert the transform to get parent-frame relative transform
-                self.transform_out = self.transform.Inverse()
+                self.transform_out = self.transform
 
             self.transform_out.M.DoRotZ(-math.pi/2)
             self.transform_out.M.DoRotX(-math.pi/2)

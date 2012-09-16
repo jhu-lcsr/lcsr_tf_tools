@@ -10,6 +10,7 @@ import PyKDL
 
 import std_msgs.msg as std_msgs
 import geometry_msgs.msg as geometry_msgs
+import lcsr_tf_tools.msg as lcsr_tf_tools
 import tf.msg
 
 from multi_static_transform_publisher import MultiPublisher
@@ -77,7 +78,7 @@ def main():
     # Construct transform message
     tform = geometry_msgs.TransformStamped()
     tform.header.frame_id = args.parent_frame_id[0]
-    tform.header.stamp = rospy.Time(1E-3*args.period[0])
+    tform.header.stamp = rospy.Time(0)
 
     tform.child_frame_id = args.child_frame_id[0]
 
@@ -90,10 +91,31 @@ def main():
     tform.transform.rotation.z = args.quat[2]
     tform.transform.rotation.w = args.quat[3]
 
+    static_tform = lcsr_tf_tools.StaticTransform()
+    static_tform.header.stamp = rospy.Time.now()
+    static_tform.transform = tform
+    static_tform.publish_period = rospy.Duration(1E-3*args.period[0])
+
     # Publish the transform
     rospy.loginfo("Registering static transform %s --> %s\n%s" %(tform.header.frame_id, tform.child_frame_id, str(tform)))
-    set_pub = rospy.Publisher(args.node_name[0]+'/set_frame', geometry_msgs.TransformStamped, latch=True)
-    set_pub.publish(tform)
+    set_pub = None
+
+    # Get a tf_listener to make sure the frame gets published
+    listener = tf.TransformListener(True, rospy.Duration(10.0))
+
+    # Wait for the frame to be published
+    while listener and not rospy.is_shutdown():
+        static_tform.header.stamp = rospy.Time.now()
+        set_pub = rospy.Publisher(args.node_name[0]+'/set_frame', lcsr_tf_tools.StaticTransform, latch=True)
+        set_pub.publish(static_tform)
+        try:
+            now = rospy.Time(0)
+            listener.waitForTransform(tform.header.frame_id, tform.child_frame_id, now, rospy.Duration(1.0))
+            pose = listener.lookupTransform(tform.header.frame_id, tform.child_frame_id, now)
+            rospy.loginfo("Registered static transform %s --> %s\n%s: %s" %(tform.header.frame_id, tform.child_frame_id, str(tform), str(pose)))
+            listener = None
+        except tf.Exception as ex:
+            rospy.logwarn("Multi static transform %s --> %s not being published yet: %s" % (tform.header.frame_id, tform.child_frame_id, str(ex)))
 
     # Wait for sigint
     rospy.spin()

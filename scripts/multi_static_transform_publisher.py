@@ -3,11 +3,13 @@
 import fractions
 
 import roslib; roslib.load_manifest('lcsr_tf_tools')
+import threading
 import rospy
 import tf
 
 import std_msgs.msg as std_msgs
 import geometry_msgs.msg as geometry_msgs
+import lcsr_tf_tools.msg as lcsr_tf_tools
 import tf.msg
 
 class MultiPublisher(object):
@@ -19,7 +21,7 @@ class MultiPublisher(object):
         self.update_min_period()
 
         # Create some subscribers for adding / updating / removing frames
-        self.add_sub = rospy.Subscriber('~set_frame', geometry_msgs.TransformStamped, self.set_frame_cb)
+        self.add_sub = rospy.Subscriber('~set_frame', lcsr_tf_tools.StaticTransform, self.set_frame_cb)
         self.del_sub = rospy.Subscriber('~del_frame', std_msgs.String, self.del_frame_cb)
 
         # Create a raw tf publisher becuase pytf doesn't provide an api to publish
@@ -40,16 +42,16 @@ class MultiPublisher(object):
 
     def set_frame_cb(self,new_frame):
         """ Add or update a frame definition. """
-        if new_frame.child_frame_id in self.frames:
-            rospy.loginfo("Received update to frame:" + str(new_frame.child_frame_id))
+        if new_frame.transform.child_frame_id in self.frames:
+            rospy.loginfo("Received update to frame:" + str(new_frame.transform.child_frame_id))
         else:
-            rospy.loginfo("Received new frame:" + str(new_frame.child_frame_id))
+            rospy.loginfo("Received new frame:" + str(new_frame.transform.child_frame_id))
         # Get the period from the timestamp
-        period = rospy.Duration(new_frame.header.stamp.to_sec())
+        period = rospy.Duration(new_frame.publish_period.to_sec())
         # Set the timestamp to THE BEGINNING OF TIME
-        new_frame.header.stamp = rospy.Time(0)
+        new_frame.transform.header.stamp = rospy.Time(0)
         # Store the new frame
-        self.frames[new_frame.child_frame_id] = (new_frame, period)
+        self.frames[new_frame.transform.child_frame_id] = (new_frame.transform, period)
         # Update the minimum sleeping period
         self.update_min_period()
 
@@ -94,7 +96,13 @@ def main():
 
     # Create the multi pub
     multi_pub = MultiPublisher()
-    multi_pub.broadcast_frames()
+
+    pub_thread = threading.Thread(target=multi_pub.broadcast_frames)
+    pub_thread.start()
+
+    rospy.spin()
+
+    pub_thread.join()
 
 if __name__ == '__main__':
     main()
