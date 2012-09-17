@@ -1,0 +1,3 @@
+Header header
+geometry_msgs/TransformStamped transform
+duration publish_period
