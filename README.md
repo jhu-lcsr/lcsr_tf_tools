@@ -10,6 +10,13 @@ fill some usability gaps in TF.
 
 This program creates a TF frame based off of an interactive marker which can be manipulated in RViz.
 
+For example, to create an interactive tf frame, you can run this script, and then add an "Interactive Marker" display to an instance of RViz.
+
+```
+rosrun lcsr_tf_tools interactive_transform_publisher 0 0 0  0 0 0 /world /cmd_frame 10
+```
+
+
 ### Twist Frame Integrator
 
 This script integrates `geomatry_msgs/TwistStamped` messages and broadcasts
