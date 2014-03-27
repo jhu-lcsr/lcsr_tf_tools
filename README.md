@@ -6,6 +6,10 @@ fill some usability gaps in TF.
 
 ## Tools
 
+### Interactive Transform Publisher
+
+This program creates a TF frame based off of an interactive marker which can be manipulated in RViz.
+
 ### Twist Frame Integrator
 
 This script integrates `geomatry_msgs/TwistStamped` messages and broadcasts
