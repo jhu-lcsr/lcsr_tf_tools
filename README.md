@@ -4,21 +4,34 @@ LCSR TF Tools
 This package contains a bunch of utilities that have been created in the aim to
 fill some usability gaps in TF.
 
-Tools
-=====
+## Tools
 
-Multi-Static Publisher
-----------------------
-The most widely-usable tool in this package is the
-mutli_static_transform_publisher. This node listens on a topic for static
-transforms to publish, and then re-publishes them as batch messages when it can
-do so. It will publish at the highest common period of the requested frames.
+### Twist Frame Integrator
+
+This script integrates `geomatry_msgs/TwistStamped` messages and broadcasts
+a TF frame of a given name.
+
+Paramters:
+
+* `~frame_id`
+* `~child_frame_id`
+* `~linear_multiplier`
+* `~angular_multiplier`
+* `~broadcast_rate`
+* `~body_fixed`
+
+### Multi-Static Publisher
+
+This node listens on a topic for static transforms to publish, and then
+re-publishes them as batch messages when it can do so. It will publish
+at the highest common period of the requested frames.
 
 The publisher itself has no arguments, but instead it is controlled by running
 two other scripts:
 - set_multi_static.py
 - del_multi_static.py
 
+This is a stop-gap until TF2's static transforms are better supported.
 
 Usage:
 
