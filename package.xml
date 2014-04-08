@@ -1,0 +1,27 @@
+<package>
+  <name>lcsr_tf_tools</name>
+  <version>0.1.0</version>
+  <description>
+     lcsr_tf_tools
+  </description>
+  <maintainer email="jbo@jhu.edu">Jonathan Bohren</maintainer>
+  <author>Jonathan Bohren</author>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>tf</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>interactive_markers</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>python_orocos_kdl</run_depend>
+
+  <run_depend>tf</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>interactive_markers</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+</package>
+
+
