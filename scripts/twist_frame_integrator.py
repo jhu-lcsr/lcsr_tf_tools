@@ -87,6 +87,7 @@ class TwistFrameIntegrator(object):
         This callback integrates the linear and angular velocities into a TF
         frame, and then broadcasts the frame.
         """
+
         try:
             # Acquire broadcast lock
             self.broadcast_lock.acquire()
