@@ -26,10 +26,16 @@ class TwistFrameIntegrator(object):
         self.body_fixed = rospy.get_param('~body_fixed')
 
         # Initialize the frame we're going to publish
-        self.transform = PyKDL.Frame()
+        xyzw = [float(f) for f in rospy.get_param('~xyzw','0 0 0 1').split()]
+        xyzw_offset = [float(f) for f in rospy.get_param('~xyzw_offset','0 0 0 1').split()]
+        xyz = [float(f) for f in rospy.get_param('~xyz','0 0 0').split()]
+        rospy.logwarn("xyzw: " + str(xyzw))
+        rospy.logwarn("xyz: " + str(xyz))
+        self.transform = PyKDL.Frame(
+            PyKDL.Rotation.Quaternion(*xyzw)*PyKDL.Rotation.Quaternion(*xyzw_offset),
+            PyKDL.Vector(*xyz))
         self.transform_out = PyKDL.Frame()
-        self.translation = (0,0,0)
-        self.rotation = (0,0,0,1)
+        self.rotation = self.transform.M.GetQuaternion()
         self.time = rospy.Time.now()
         self.frame_id = rospy.get_param('~frame_id')
         self.child_frame_id = rospy.get_param('~child_frame_id')
