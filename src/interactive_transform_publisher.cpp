@@ -153,6 +153,8 @@ int main(int argc, char ** argv)
   // create a non-interactive control which contains the box
   InteractiveMarkerControl tf_control;
   tf_control.always_visible = false;
+  tf_control.orientation_mode = InteractiveMarkerControl::VIEW_FACING;
+  tf_control.interaction_mode = InteractiveMarkerControl::MOVE_PLANE;
   tf_control.markers.push_back( sphere_marker );
 
   // add the control to the interactive marker
