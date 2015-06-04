@@ -48,17 +48,24 @@ protected:
         it!=msg->transforms.end();
         ++it)
     {
+      std::string frame_id = it->child_frame_id;
+      if(frame_id[0] != '/') {
+        frame_id.insert(0, "/");
+      }
 
       size_t sep_index = 0;
       while(true) {
         // Look for the next separator
-        sep_index = it->child_frame_id.find("/",sep_index+1);
+        sep_index = frame_id.find("/",sep_index+1);
 
         // Look up the partial frame id in the hashmap
-        if(frame_ids_.find(it->child_frame_id.substr(0,sep_index)) != frame_ids_.end()) {
+        std::string sub_frame_id = frame_id.substr(0,sep_index);
+        if(frame_ids_.find(sub_frame_id) != frame_ids_.end()) {
           // Add this transform to the buffered message
           msg_.transforms.push_back(*it);
           break;
+        } else {
+          ROS_DEBUG_STREAM(sub_frame_id<<" not relayed");
         }
 
         // Break once we've compared the whole string
