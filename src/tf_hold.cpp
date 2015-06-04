@@ -23,18 +23,18 @@ TFHold::TFHold(ros::NodeHandle nh, ros::Duration max_cache_time) :
 void TFHold::broadcast(ros::Time time)
 {
   remote_listener_->getFrameStrings(frame_ids_);
-  transforms_.resize(frame_ids_.size());
-  transform_msgs_.resize(frame_ids_.size());
+  transforms_.clear();
   std::string parent;
 
-  auto frame_id=frame_ids_.begin();
-  auto transform=transforms_.begin();
-  auto transform_msg=transform_msgs_.begin();
-
-  for(;frame_id != frame_ids_.end(); ++frame_id, ++transform, ++transform_msg) {
-    remote_listener_->getParent(*frame_id, time, parent);
-    remote_listener_->lookupTransform(parent, *frame_id, time, *transform);
-    tf::transformStampedTFToMsg(*transform, *transform_msg);
+  for(auto frame_id=frame_ids_.begin(); 
+      frame_id != frame_ids_.end(); 
+      ++frame_id) {
+    if(remote_listener_->getParent(*frame_id, time, parent)) {
+      std::cerr<<"lookup "<<parent<<" -> "<<*frame_id<<std::endl;
+      tf::StampedTransform transform;
+      remote_listener_->lookupTransform(parent, *frame_id, time, transform);
+      transforms_.push_back(transform);
+    }
   }
 
   broadcaster_.sendTransform(transforms_);
