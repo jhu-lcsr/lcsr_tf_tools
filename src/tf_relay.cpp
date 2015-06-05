@@ -70,7 +70,7 @@ protected:
         if(frame_ids_.find(sub_frame_id) != frame_ids_.end() and filtered_frame_ids_.find(frame_id) == filtered_frame_ids_.end()) {
           // Add this transform to the buffered message
           msg_.transforms.push_back(*it);
-          ROS_INFO_STREAM(frame_id<<" relayed");
+          ROS_DEBUG_STREAM(frame_id<<" relayed");
           break;
         } else {
           ROS_DEBUG_STREAM(frame_id<<" not relayed");

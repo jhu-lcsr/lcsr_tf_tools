@@ -30,7 +30,6 @@ void TFHold::broadcast(ros::Time time)
       frame_id != frame_ids_.end(); 
       ++frame_id) {
     if(remote_listener_->getParent(*frame_id, time, parent)) {
-      std::cerr<<"lookup "<<parent<<" -> "<<*frame_id<<std::endl;
       tf::StampedTransform transform;
       remote_listener_->lookupTransform(parent, *frame_id, time, transform);
       transforms_.push_back(transform);
