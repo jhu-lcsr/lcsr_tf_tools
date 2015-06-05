@@ -26,6 +26,11 @@ public:
       frame_ids_.insert(*it);
     }
 
+    nhp.getParam("filtered_frame_ids", frame_ids);
+    for(std::vector<std::string>::const_iterator it=frame_ids.begin(); it != frame_ids.end(); ++it) {
+      filtered_frame_ids_.insert(*it);
+    }
+
     pub_ = nh.advertise<tf::tfMessage>("tf_out", 50);
     sub_ = nh.subscribe("tf_in", 100, &TFRelay::cb, this);
   }
@@ -60,12 +65,13 @@ protected:
 
         // Look up the partial frame id in the hashmap
         std::string sub_frame_id = frame_id.substr(0,sep_index);
-        if(frame_ids_.find(sub_frame_id) != frame_ids_.end()) {
+        if(frame_ids_.find(sub_frame_id) != frame_ids_.end() and filtered_frame_ids_.find(frame_id) == filtered_frame_ids_.end()) {
           // Add this transform to the buffered message
           msg_.transforms.push_back(*it);
+          ROS_INFO_STREAM(sub_frame_id<<" relayed");
           break;
         } else {
-          ROS_DEBUG_STREAM(sub_frame_id<<" not relayed");
+          ROS_INFO_STREAM(sub_frame_id<<" not relayed");
         }
 
         // Break once we've compared the whole string
@@ -79,6 +85,7 @@ protected:
   ros::Rate broadcast_rate_;
   tf::tfMessage msg_;
   boost::unordered_set<std::string> frame_ids_;
+  boost::unordered_set<std::string> filtered_frame_ids_;
   ros::Subscriber sub_;
   ros::Publisher pub_;
 };

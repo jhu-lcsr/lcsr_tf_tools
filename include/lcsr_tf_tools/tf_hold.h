@@ -20,7 +20,6 @@ namespace lcsr_tf_tools {
 
   protected:
     ros::NodeHandle nh_;
-    ros::NodeHandle remote_nh_;
 
     boost::shared_ptr<tf::TransformListener> remote_listener_;
     tf::TransformBroadcaster broadcaster_;

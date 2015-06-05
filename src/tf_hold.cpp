@@ -12,12 +12,12 @@ TFHold::TFHold(ros::NodeHandle nh, ros::Duration max_cache_time) :
   nh_(nh)
 {
   // Construct tf remapping & node handle
-  std::map<std::string, std::string> remote_tf_remapping;
-  remote_tf_remapping["/tf"] = "/remote/tf";
-  remote_nh_ = ros::NodeHandle(nh, "/remote", remote_tf_remapping);
+  std::map<std::string, std::string> tf_remapping;
+  tf_remapping["/tf"] = "tf";
+  ros::NodeHandle remapped_nh = ros::NodeHandle(nh, nh.getNamespace(), tf_remapping);
 
   // Create a tf listener for remote frames only
-  remote_listener_ = boost::make_shared<tf::TransformListener>(remote_nh_, max_cache_time);
+  remote_listener_ = boost::make_shared<tf::TransformListener>(remapped_nh, max_cache_time);
 }
 
 void TFHold::broadcast(ros::Time time)
