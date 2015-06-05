@@ -26,8 +26,9 @@ public:
       frame_ids_.insert(*it);
     }
 
-    nhp.getParam("filtered_frame_ids", frame_ids);
-    for(std::vector<std::string>::const_iterator it=frame_ids.begin(); it != frame_ids.end(); ++it) {
+    std::vector<std::string> filtered_frame_ids;
+    nhp.getParam("filtered_frame_ids", filtered_frame_ids);
+    for(std::vector<std::string>::const_iterator it=filtered_frame_ids.begin(); it != filtered_frame_ids.end(); ++it) {
       filtered_frame_ids_.insert(*it);
     }
 
@@ -68,10 +69,10 @@ protected:
         if(frame_ids_.find(sub_frame_id) != frame_ids_.end() and filtered_frame_ids_.find(frame_id) == filtered_frame_ids_.end()) {
           // Add this transform to the buffered message
           msg_.transforms.push_back(*it);
-          ROS_INFO_STREAM(sub_frame_id<<" relayed");
+          ROS_INFO_STREAM(frame_id<<" relayed");
           break;
         } else {
-          ROS_INFO_STREAM(sub_frame_id<<" not relayed");
+          ROS_DEBUG_STREAM(frame_id<<" not relayed");
         }
 
         // Break once we've compared the whole string
