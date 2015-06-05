@@ -32,8 +32,9 @@ public:
       filtered_frame_ids_.insert(*it);
     }
 
+    ros::TransportHints hints = ros::TransportHints().udp();
     pub_ = nh.advertise<tf::tfMessage>("tf_out", 50);
-    sub_ = nh.subscribe("tf_in", 100, &TFRelay::cb, this);
+    sub_ = nh.subscribe("tf_in", 100, &TFRelay::cb, this, hints);
   }
 
   void sleep() {
