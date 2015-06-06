@@ -10,7 +10,7 @@
 class TFRelay {
 public:
   TFRelay(ros::NodeHandle nh) :
-    broadcast_rate_(50.0)
+    broadcast_rate_(25.0)
   {
 
     ros::NodeHandle nhp("~");
@@ -40,7 +40,7 @@ public:
     if(use_udp) {
       hints = hints.udp();
     }
-    sub_ = nh.subscribe("tf_in", 100, &TFRelay::cb, this, hints);
+    sub_ = nh.subscribe("tf_in", 300, &TFRelay::cb, this, hints);
   }
 
   void sleep() {

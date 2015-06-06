@@ -11,7 +11,7 @@ public:
   { }
 
   void subscribe() {
-    info_sub_ = nh_.subscribe("camera_info", 10, &CameraInfoTFHold::info_cb, this);
+    info_sub_ = nh_.subscribe("camera_info", 30, &CameraInfoTFHold::info_cb, this);
   }
 
 protected:
