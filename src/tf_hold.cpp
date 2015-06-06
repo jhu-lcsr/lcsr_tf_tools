@@ -26,8 +26,8 @@ void TFHold::broadcast(ros::Time time)
   transforms_.clear();
   std::string parent;
 
-  for(auto frame_id=frame_ids_.begin(); 
-      frame_id != frame_ids_.end(); 
+  for(auto frame_id=frame_ids_.begin();
+      frame_id != frame_ids_.end();
       ++frame_id) {
     if(remote_listener_->getParent(*frame_id, time, parent)) {
       tf::StampedTransform transform;
