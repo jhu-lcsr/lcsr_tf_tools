@@ -11,6 +11,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace lcsr_tf_tools {
+  
   class TFHold {
   public:
     TFHold(ros::NodeHandle nh, ros::Duration max_cache_time = ros::Duration(30.0));
@@ -22,10 +23,10 @@ namespace lcsr_tf_tools {
     ros::NodeHandle nh_;
 
     boost::shared_ptr<tf::TransformListener> remote_listener_;
-    tf::TransformBroadcaster broadcaster_;
+    ros::Publisher tf_pub_;
+    tf::tfMessage tf_msg_;
 
     std::vector<std::string> frame_ids_;
-    std::vector<tf::StampedTransform> transforms_;
     std::vector<geometry_msgs::TransformStamped> transform_msgs_;
   };
 }

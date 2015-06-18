@@ -11,9 +11,14 @@ using namespace lcsr_tf_tools;
 TFHold::TFHold(ros::NodeHandle nh, ros::Duration max_cache_time) :
   nh_(nh)
 {
+  // Construct tf "broadcaster" publisher
+  tf_pub_ = nh.advertise<tf::tfMessage>("tf_out", 10);
+
   // Construct tf remapping & node handle
+  // This is sort of awkward because we want to be able to remap `tf_in` to `/tf`
+  // for the transform listener
   std::map<std::string, std::string> tf_remapping;
-  tf_remapping["/tf"] = "tf";
+  tf_remapping["/tf"] = nh.resolveName("tf_in");
   ros::NodeHandle remapped_nh = ros::NodeHandle(nh, nh.getNamespace(), tf_remapping);
 
   // Create a tf listener for remote frames only
@@ -22,20 +27,25 @@ TFHold::TFHold(ros::NodeHandle nh, ros::Duration max_cache_time) :
 
 void TFHold::broadcast(ros::Time time)
 {
+  tf_msg_.transforms.clear();
   remote_listener_->getFrameStrings(frame_ids_);
-  transforms_.clear();
   std::string parent;
+
+  // Temporaries
+  tf::StampedTransform transform;
+  geometry_msgs::TransformStamped transform_msg;
 
   for(auto &frame_id: frame_ids_) {
     parent = "NO_PARENT";
     if(remote_listener_->getParent(frame_id, time, parent)) {
-      tf::StampedTransform transform;
       remote_listener_->lookupTransform(parent, frame_id, time, transform);
-      transforms_.push_back(transform);
+      transformStampedTFToMsg(transform, transform_msg);
+      tf_msg_.transforms.push_back(transform_msg);
     } else {
       ROS_WARN_STREAM("Couldn't lookup \""<<frame_id<<"\" at time "<<time<<" got parent "<<parent);
     }
   }
 
-  broadcaster_.sendTransform(transforms_);
+  // publish the transform
+  tf_pub_.publish(tf_msg_);
 }
