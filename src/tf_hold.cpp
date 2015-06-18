@@ -35,11 +35,15 @@ void TFHold::broadcast(ros::Time time)
   tf::StampedTransform transform;
   geometry_msgs::TransformStamped transform_msg;
 
+  // Get the current time
+  ros::Time time_now = ros::Time::now();
+
   for(auto &frame_id: frame_ids_) {
     parent = "NO_PARENT";
     if(remote_listener_->getParent(frame_id, time, parent)) {
       remote_listener_->lookupTransform(parent, frame_id, time, transform);
       transformStampedTFToMsg(transform, transform_msg);
+      transform_msg.header.stamp = time_now;
       tf_msg_.transforms.push_back(transform_msg);
     } else {
       ROS_WARN_STREAM("Couldn't lookup \""<<frame_id<<"\" at time "<<time<<" got parent "<<parent);
