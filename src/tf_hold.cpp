@@ -26,13 +26,14 @@ void TFHold::broadcast(ros::Time time)
   transforms_.clear();
   std::string parent;
 
-  for(auto frame_id=frame_ids_.begin();
-      frame_id != frame_ids_.end();
-      ++frame_id) {
-    if(remote_listener_->getParent(*frame_id, time, parent)) {
+  for(auto &frame_id: frame_ids_) {
+    parent = "NO_PARENT";
+    if(remote_listener_->getParent(frame_id, time, parent)) {
       tf::StampedTransform transform;
-      remote_listener_->lookupTransform(parent, *frame_id, time, transform);
+      remote_listener_->lookupTransform(parent, frame_id, time, transform);
       transforms_.push_back(transform);
+    } else {
+      ROS_WARN_STREAM("Couldn't lookup \""<<frame_id<<"\" at time "<<time<<" got parent "<<parent);
     }
   }
 

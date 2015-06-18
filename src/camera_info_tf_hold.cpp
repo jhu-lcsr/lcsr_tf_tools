@@ -11,7 +11,7 @@ public:
   { }
 
   void subscribe() {
-    info_sub_ = nh_.subscribe("camera_info", 30, &CameraInfoTFHold::info_cb, this);
+    info_sub_ = nh_.subscribe("camera_info", 1, &CameraInfoTFHold::info_cb, this);
   }
 
 protected:
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
   ros::NodeHandle nh;
 
-  CameraInfoTFHold citf(nh, ros::Duration(30.0));
+  CameraInfoTFHold citf(nh, ros::Duration(60.0));
   citf.subscribe();
 
   ros::spin();
