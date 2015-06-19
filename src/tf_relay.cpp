@@ -3,15 +3,24 @@
 #include <lcsr_tf_tools/tf_relay.h>
 
 TFRelay::TFRelay(ros::NodeHandle nh) :
-  broadcast_rate_(25.0)
+  delay_(0.0),
+  broadcast_rate_(25.0),
+  buffered_transforms_(TransformStampedCmp(true))
 {
 
   ros::NodeHandle nhp("~");
 
   // Get desired broadcast rate
   double broadcast_rate;
-  nhp.getParam("broadcast_rate", broadcast_rate);
-  broadcast_rate_ = ros::Rate(broadcast_rate);
+  if(nhp.getParam("broadcast_rate", broadcast_rate)) {
+    broadcast_rate_ = ros::Rate(broadcast_rate);
+  }
+
+  // Get relay delay
+  double delay;
+  if(nhp.getParam("delay", delay)) {
+    delay_ = ros::Duration(delay);
+  }
 
   // Get frame ids to relay
   std::vector<std::string> frame_ids;
@@ -45,6 +54,11 @@ void TFRelay::sleep()
 
 void TFRelay::broadcast()
 {
+  // Add all buffereed transforms that are ready to be broadcast
+  while(not buffered_transforms_.empty() and buffered_transforms_.top().header.stamp + delay_ <= ros::Time::now()) {
+    msg_.transforms.push_back(buffered_transforms_.top());
+    buffered_transforms_.pop();
+  }
   pub_.publish(msg_);
   msg_.transforms.clear();
 }
@@ -69,8 +83,8 @@ void TFRelay::cb(const tf::tfMessageConstPtr &msg)
       // Look up the partial frame id in the hashmap
       std::string sub_frame_id = frame_id.substr(0,sep_index);
       if(frame_ids_.find(sub_frame_id) != frame_ids_.end() and filtered_frame_ids_.find(frame_id) == filtered_frame_ids_.end()) {
-        // Add this transform to the buffered message
-        msg_.transforms.push_back(*it);
+        // Add this transform to the buffered message if it's ready to be relayed, otherwise, add it to the queue
+        buffered_transforms_.push(*it);
         ROS_DEBUG_STREAM(frame_id<<" relayed");
         break;
       } else {
