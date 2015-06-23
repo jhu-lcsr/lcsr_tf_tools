@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6.3)
 
 project(lcsr_tf_tools)
 
-find_package(catkin REQUIRED tf geometry_msgs interactive_markers visualization_msgs message_generation)
+find_package(catkin REQUIRED tf geometry_msgs interactive_markers visualization_msgs message_generation std_msgs)
 
 add_message_files(
   FILES StaticTransform.msg)

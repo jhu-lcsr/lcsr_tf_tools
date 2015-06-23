@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <ros/time.h>
 #include <tf/tfMessage.h>
+#include <std_msgs/Float64.h>
 #include <boost/unordered_set.hpp>
 #include <queue>
 
@@ -32,6 +33,7 @@ public:
 
 protected:
 
+  void set_delay_cb(const std_msgs::Float64 &msg);
   void cb(const tf::tfMessageConstPtr &msg);
 
   ros::Duration delay_;
@@ -44,7 +46,8 @@ protected:
       buffered_transforms_;
   boost::unordered_set<std::string> frame_ids_;
   boost::unordered_set<std::string> filtered_frame_ids_;
-  ros::Subscriber sub_;
+  ros::Subscriber tf_sub_;
+  ros::Subscriber set_delay_sub_;
   ros::Publisher pub_;
 };
 

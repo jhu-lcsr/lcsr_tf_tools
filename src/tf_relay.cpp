@@ -44,7 +44,8 @@ TFRelay::TFRelay(ros::NodeHandle nh) :
   if(use_udp) {
     hints = hints.udp();
   }
-  sub_ = nh.subscribe("tf_in", 300, &TFRelay::cb, this, hints);
+  tf_sub_ = nh.subscribe("tf_in", 300, &TFRelay::cb, this, hints);
+  set_delay_sub_ = nhp.subscribe("set_delay", 1, &TFRelay::set_delay_cb, this);
 }
 
 void TFRelay::sleep()
@@ -62,6 +63,12 @@ void TFRelay::broadcast()
   pub_.publish(msg_);
   msg_.transforms.clear();
 }
+
+void TFRelay::set_delay_cb(const std_msgs::Float64 &msg)
+{
+  delay_ = ros::Duration(msg.data);
+}
+
 
 void TFRelay::cb(const tf::tfMessageConstPtr &msg)
 {
