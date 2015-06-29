@@ -46,7 +46,7 @@ void TFHold::broadcast(ros::Time time)
       transform_msg.header.stamp = time_now;
       tf_msg_.transforms.push_back(transform_msg);
     } else {
-      ROS_WARN_STREAM("Couldn't lookup \""<<frame_id<<"\" at time "<<time<<" got parent "<<parent);
+      ROS_DEBUG_STREAM("Couldn't lookup \""<<frame_id<<"\" at time "<<time<<" got parent "<<parent);
     }
   }
 
